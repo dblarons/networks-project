@@ -1,5 +1,10 @@
 import zmq
 
+import registrar.Registrar.Client
+import registrar.Registrar.Command
+import registrar.Registrar.CommandType
+import registrar.Registrar.Room
+
 PORT = '5556'
 
 context = zmq.Context()

@@ -69,3 +69,23 @@ peers to one another.
 - Client
 
   - Unique id (provided by the client)
+
+## TODO
+
+- [ ] Server
+
+  - [ ] When client issues list command, server responds with a list of the
+  rooms in the database
+
+  - [ ] When client issues a create command, server creates a room
+
+  - [ ] When client issues a select command, server broadcasts client's info
+  too peers and peer info to client
+
+- [ ] Client (in Unity / C#)
+
+  - [ ] Client can issue list command and display results (stretch goal)
+
+  - [ ] Client can issue a create command and join the new room
+
+  - [ ] Client can issue a select command and join the existing room
