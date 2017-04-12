@@ -1,0 +1,28 @@
+namespace Registrar;
+
+enum CommandType:byte {
+  List = 0,
+  Create,
+  Select
+}
+
+table Room {
+  guid:string;
+  name:string;
+  count:short;
+  clients:[Client];
+}
+
+table Client {
+  id:string;
+  ip:string;
+  port:int;
+}
+
+table Command {
+  type:CommandType;
+  client:Client;
+  room:Room;
+}
+
+root_type Command;

@@ -90,3 +90,5 @@ ENV/
 
 # Sqlite db
 *.db
+
+registrar/Registrar/

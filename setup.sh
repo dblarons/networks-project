@@ -5,3 +5,7 @@ if [ -f ./registrar.db ]; then
 fi
 
 python3 create.py
+
+# Compile flatbuffers
+flatc --python -o registrar/ flatbuffers/registrar.fbs
+

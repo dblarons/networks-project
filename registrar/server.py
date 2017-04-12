@@ -1,9 +1,15 @@
-import zmq
+import flatbuffers
 import time
+import zmq
 
-import registrar.config as config
 from registrar.models.client import Client
 from registrar.models.room import Room
+import registrar.config as config
+
+import registrar.Registrar.Client
+import registrar.Registrar.Command
+import registrar.Registrar.CommandType
+import registrar.Registrar.Room
 
 PORT = '5556'
 
