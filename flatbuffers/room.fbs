@@ -5,7 +5,6 @@ namespace Registrar;
 table Room {
   guid:string;
   name:string;
-  count:short;
   clients:[Client];
 }
 

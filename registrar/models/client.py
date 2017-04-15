@@ -5,5 +5,6 @@ from .room import Room
 
 class Client(BaseModel):
     internal_name = CharField(unique=True)
-    name = CharField()
+    ip = CharField()
     room = ForeignKeyField(Room, related_name='clients')
+    port = IntegerField(default=0)
