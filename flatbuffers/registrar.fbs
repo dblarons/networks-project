@@ -1,28 +1,42 @@
+include "list.fbs";
+
 namespace Registrar;
 
-enum CommandType:byte {
-  List = 0,
-  Create,
-  Select
+union Message { ListCmd }
+
+table ListCmd {
+  response:Response;
 }
 
-table Room {
-  guid:string;
-  name:string;
-  count:short;
-  clients:[Client];
-}
+// table Create {
+//   request:xxx;
+//   response:xxx;
+// }
+//
+// table Select {
+//   request:xxx;
+//   response:xxx;
+// }
 
-table Client {
-  id:string;
-  ip:string;
-  port:int;
-}
+// table ClientCreate {
+//   client:Client;
+//   name:string;
+// }
+//
+// table ServerCreate {
+//   room:Room;
+// }
+//
+// table ClientSelect {
+//   guid:string;
+// }
+//
+// table ServerSelect {
+//   clients:[Client];
+// }
 
 table Command {
-  type:CommandType;
-  client:Client;
-  room:Room;
+  message:Message;
 }
 
 root_type Command;

@@ -1,0 +1,12 @@
+include "client.fbs";
+
+namespace Registrar;
+
+table Room {
+  guid:string;
+  name:string;
+  count:short;
+  clients:[Client];
+}
+
+root_type Room;

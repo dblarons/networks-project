@@ -1,15 +1,12 @@
 import flatbuffers
-import time
 import zmq
 
 from registrar.models.client import Client
 from registrar.models.room import Room
 import registrar.config as config
 
-import registrar.Registrar.Client
 import registrar.Registrar.Command
-import registrar.Registrar.CommandType
-import registrar.Registrar.Room
+import registrar.Registrar.Message
 
 PORT = '5556'
 
@@ -18,15 +15,29 @@ db.connect();
 
 context = zmq.Context()
 socket = context.socket(zmq.REP)
-socket.bind("tcp://*:%s" % PORT)
+socket.bind('tcp://*:%s' % PORT)
+
+def build_list_response(builder):
+    registrar.Registrar.Command.CommandStart(builder)
+    registrar.Registrar.Command.CommandAddMessageType(
+        builder, registrar.Registrar.Message.Message().ListCmd)
+    return registrar.Registrar.Command.CommandEnd(builder)
 
 while True:
     #  Wait for next request from client
-    message = socket.recv()
-    print("Received request: ", message)
-    with db.transaction():
-        Room.create(
-            guid=message,
-            name='barbaz')
-    time.sleep(1)
-    socket.send_string("World from %s" % PORT)
+    request = socket.recv()
+    print('SERVER: Received message')
+
+    builder = flatbuffers.Builder(1024)
+    offset = build_list_response(builder)
+    builder.Finish(offset)
+    response = builder.Output()
+
+    socket.send(response)
+
+    print('SERVER: Sent a response')
+
+    # with db.transaction():
+    #     Room.create(
+    #         guid=message,
+    #         name='barbaz')

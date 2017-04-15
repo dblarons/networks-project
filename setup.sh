@@ -7,5 +7,4 @@ fi
 python3 create.py
 
 # Compile flatbuffers
-flatc --python -o registrar/ flatbuffers/registrar.fbs
-
+flatc --python -o registrar/ -I flatbuffers/ flatbuffers/registrar.fbs

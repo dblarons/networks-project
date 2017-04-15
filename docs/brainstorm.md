@@ -77,10 +77,22 @@ peers to one another.
   - [ ] When client issues list command, server responds with a list of the
   rooms in the database
 
+    - Client: CommandType
+
+    - Server: List of rooms
+
   - [ ] When client issues a create command, server creates a room
 
+    - Client: Create command with a Client object and Room name
+
+    - Server: Room object
+
   - [ ] When client issues a select command, server broadcasts client's info
-  too peers and peer info to client
+  to peers and peer info to client
+
+    - Client: Room GUID
+
+    - Server: Peers and Room to asking client; Client to existing peers
 
 - [ ] Client (in Unity / C#)
 
