@@ -2,11 +2,7 @@ include "list.fbs";
 
 namespace Registrar;
 
-union Message { ListCmd }
-
-table ListCmd {
-  response:Response;
-}
+union Message { List }
 
 // table Create {
 //   request:xxx;

@@ -2,6 +2,7 @@ include "room.fbs";
 
 namespace Registrar;
 
-table Response {
-  rooms:[Registrar.Room];
+table List {
+  // response
+  rooms:[Room];
 }

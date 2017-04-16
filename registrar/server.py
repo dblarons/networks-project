@@ -3,8 +3,7 @@ import zmq
 
 import registrar.Registrar.Command
 import registrar.Registrar.Message
-import registrar.Registrar.Response
-import registrar.Registrar.ListCmd
+import registrar.Registrar.List
 
 from registrar.models.client import Client
 from registrar.models.room import Room
@@ -19,30 +18,27 @@ context = zmq.Context()
 socket = context.socket(zmq.REP)
 socket.bind('tcp://*:%s' % PORT)
 
-def build_list_response(builder, rooms_model):
+def build_command(builder, message_type, message):
+    registrar.Registrar.Command.CommandStart(builder)
+    registrar.Registrar.Command.CommandAddMessageType(
+        builder, message_type)
+    registrar.Registrar.Command.CommandAddMessage(builder, message)
+    return registrar.Registrar.Command.CommandEnd(builder)
+
+def build_list_message(builder, room_models):
     room_offsets = []
-    for room in rooms_model:
+    for room in room_models:
         offset = room.serialize(builder)
         room_offsets.append(offset)
 
-    registrar.Registrar.Response.ResponseStartRoomsVector(builder, len(room_offsets))
+    registrar.Registrar.List.ListStartRoomsVector(builder, len(room_offsets))
     for offset in room_offsets:
         builder.PrependUOffsetTRelative(offset)
     rooms = builder.EndVector(len(room_offsets))
 
-    registrar.Registrar.Response.ResponseStart(builder)
-    registrar.Registrar.Response.ResponseAddRooms(builder, rooms)
-    response = registrar.Registrar.Response.ResponseEnd(builder)
-
-    registrar.Registrar.ListCmd.ListCmdStart(builder)
-    registrar.Registrar.ListCmd.ListCmdAddResponse(builder, response)
-    list_cmd = registrar.Registrar.ListCmd.ListCmdEnd(builder)
-
-    registrar.Registrar.Command.CommandStart(builder)
-    registrar.Registrar.Command.CommandAddMessageType(
-        builder, registrar.Registrar.Message.Message().ListCmd)
-    registrar.Registrar.Command.CommandAddMessage(builder, list_cmd)
-    return registrar.Registrar.Command.CommandEnd(builder)
+    registrar.Registrar.List.ListStart(builder)
+    registrar.Registrar.List.ListAddRooms(builder, rooms)
+    return registrar.Registrar.List.ListEnd(builder)
 
 while True:
     #  Wait for next request from client
@@ -53,11 +49,16 @@ while True:
 
     # Switch on the message type to send a response.
     builder = flatbuffers.Builder(1024)
-    offset = 0
-    if message_type == registrar.Registrar.Message.Message().ListCmd:
-        print('SERVER: Received a ListCmd command')
+    message_offset = 0
+    if message_type == registrar.Registrar.Message.Message().List:
+        print('SERVER: Received a List command')
         rooms = Room.select()
-        offset = build_list_response(builder, rooms)
+        message_offset = build_list_message(builder, rooms)
+
+    offset = build_command(
+        builder,
+        registrar.Registrar.Message.Message().List,
+        message_offset)
 
     builder.Finish(offset)
     response = builder.Output()

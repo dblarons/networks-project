@@ -3,8 +3,7 @@ import zmq
 
 import registrar.Registrar.Command
 import registrar.Registrar.Message
-import registrar.Registrar.Response
-import registrar.Registrar.ListCmd
+import registrar.Registrar.List
 
 PORT = '5556'
 
@@ -18,18 +17,16 @@ socket.connect("tcp://localhost:%s" % PORT)
 def build_list_request(builder):
     registrar.Registrar.Command.CommandStart(builder)
     registrar.Registrar.Command.CommandAddMessageType(
-        builder, registrar.Registrar.Message.Message().ListCmd)
+        builder, registrar.Registrar.Message.Message().List)
     return registrar.Registrar.Command.CommandEnd(builder)
 
 def read_list_response(command):
-    union_list = registrar.Registrar.ListCmd.ListCmd()
+    union_list = registrar.Registrar.List.List()
     union_list.Init(command.Message().Bytes, command.Message().Pos)
 
-    list_response = union_list.Response()
-
-    rooms_length = list_response.RoomsLength()
+    rooms_length = union_list.RoomsLength()
     for i in range(rooms_length):
-        room = list_response.Rooms(i)
+        room = union_list.Rooms(i)
         print(room.Name())
 
 def send_command(builder, offset):
@@ -48,6 +45,6 @@ print('Got a response')
 
 command = registrar.Registrar.Command.Command.GetRootAsCommand(response, 0)
 
-if command.MessageType() == registrar.Registrar.Message.Message().ListCmd:
+if command.MessageType() == registrar.Registrar.Message.Message().List:
     print("CLIENT: Received list response from server")
     read_list_response(command)
