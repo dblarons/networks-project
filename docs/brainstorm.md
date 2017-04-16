@@ -74,12 +74,8 @@ peers to one another.
 
 - [ ] Server
 
-  - [ ] When client issues list command, server responds with a list of the
+  - [X] When client issues list command, server responds with a list of the
   rooms in the database
-
-    - Client: CommandType
-
-    - Server: List of rooms
 
   - [ ] When client issues a create command, server creates a room
 

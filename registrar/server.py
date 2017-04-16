@@ -1,16 +1,14 @@
 import flatbuffers
 import zmq
 
+import registrar.Registrar.Command
+import registrar.Registrar.Message
+import registrar.Registrar.Response
+import registrar.Registrar.ListCmd
+
 from registrar.models.client import Client
 from registrar.models.room import Room
 import registrar.config as config
-
-import registrar.Registrar.Client
-import registrar.Registrar.Command
-import registrar.Registrar.Message
-import registrar.Registrar.Room
-import registrar.Registrar.Response
-import registrar.Registrar.ListCmd
 
 PORT = '5556'
 
@@ -24,7 +22,7 @@ socket.bind('tcp://*:%s' % PORT)
 def build_list_response(builder, rooms_model):
     room_offsets = []
     for room in rooms_model:
-        offset = serialize_room(builder, room)
+        offset = room.serialize(builder)
         room_offsets.append(offset)
 
     registrar.Registrar.Response.ResponseStartRoomsVector(builder, len(room_offsets))
@@ -45,36 +43,6 @@ def build_list_response(builder, rooms_model):
         builder, registrar.Registrar.Message.Message().ListCmd)
     registrar.Registrar.Command.CommandAddMessage(builder, list_cmd)
     return registrar.Registrar.Command.CommandEnd(builder)
-
-def serialize_room(builder, room):
-    client_offsets = []
-    for client in room.clients:
-        offset = serialize_client(builder, client)
-        client_offsets.append(offset)
-
-    guid = builder.CreateString(room.guid)
-    name = builder.CreateString(room.name)
-
-    registrar.Registrar.Room.RoomStartClientsVector(builder, len(client_offsets))
-    for offset in client_offsets:
-        builder.PrependUOffsetTRelative(offset)
-    clients = builder.EndVector(len(client_offsets))
-
-    registrar.Registrar.Room.RoomStart(builder)
-    registrar.Registrar.Room.RoomAddGuid(builder, guid)
-    registrar.Registrar.Room.RoomAddName(builder, name)
-    registrar.Registrar.Room.RoomAddClients(builder, clients)
-
-    return registrar.Registrar.Room.RoomEnd(builder)
-
-def serialize_client(builder, client):
-    client_id = builder.CreateString(client.internal_name)
-    ip = builder.CreateString(client.ip)
-    registrar.Registrar.Client.ClientStart(builder)
-    registrar.Registrar.Client.ClientAddId(builder, client_id)
-    registrar.Registrar.Client.ClientAddIp(builder, ip)
-    registrar.Registrar.Client.ClientAddPort(builder, client.port)
-    return registrar.Registrar.Client.ClientEnd(builder)
 
 while True:
     #  Wait for next request from client
