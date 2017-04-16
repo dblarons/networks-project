@@ -12,8 +12,8 @@ Final project for CS283 Networks
 
 ## Run server application
 
-`python3 app.py`
+`python3 server_app.py`
 
-## Run temporary client application
+## Run simple client application
 
-`python3 registrar/client.py`
+`python3 client_app.py`
