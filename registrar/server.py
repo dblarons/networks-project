@@ -1,9 +1,11 @@
 import flatbuffers
+import uuid
 import zmq
 
 import registrar.Registrar.Command
-import registrar.Registrar.Message
+import registrar.Registrar.Create
 import registrar.Registrar.List
+import registrar.Registrar.Message
 
 from registrar.models.client import Client
 from registrar.models.room import Room
@@ -55,6 +57,20 @@ while True:
         rooms = Room.select()
         message_type = registrar.Registrar.Message.Message().List
         message_offset = build_list_message(builder, rooms)
+    elif Command.MessageType() == registrar.Registrar.Message.Message().Create:
+        print('SERVER: Received a Create command')
+        message_type = registrar.Registrar.Message.Message().Create
+        with db.transaction():
+            union_create = registrar.Registrar.Create.Create()
+            union_create.Init(Command.Message().Bytes, Command.Message().Pos)
+            client = union_create.Client()
+            room = Room.create(guid=uuid.uuid1(), name=union_create.Name())
+            Client.create(
+                internal_name=client.Id(),
+                ip=client.Ip(),
+                room=room.id,
+                port=client.Port())
+
 
     offset = build_command(
         builder,

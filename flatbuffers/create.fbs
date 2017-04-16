@@ -1,0 +1,9 @@
+include "client.fbs";
+
+namespace Registrar;
+
+table Create {
+  // request
+  name:string;
+  client:Client;
+}
