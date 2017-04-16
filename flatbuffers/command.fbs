@@ -1,10 +1,11 @@
+include "connect.fbs";
 include "create.fbs";
 include "join.fbs";
 include "list.fbs";
 
 namespace Registrar;
 
-union Message { List, Create, Join }
+union Message { List, Create, Join, Connect }
 
 table Command {
   message:Message;
