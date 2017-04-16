@@ -12,5 +12,6 @@ rm -rf registrar/Registrar
 flatc --python -o registrar/ flatbuffers/client.fbs
 flatc --python -o registrar/ flatbuffers/command.fbs
 flatc --python -o registrar/ flatbuffers/create.fbs
+flatc --python -o registrar/ flatbuffers/join.fbs
 flatc --python -o registrar/ flatbuffers/list.fbs
 flatc --python -o registrar/ flatbuffers/room.fbs

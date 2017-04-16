@@ -1,21 +1,10 @@
-include "list.fbs";
 include "create.fbs";
+include "join.fbs";
+include "list.fbs";
 
 namespace Registrar;
 
-union Message { List, Create }
-
-// table ServerCreate {
-//   room:Room;
-// }
-//
-// table ClientSelect {
-//   guid:string;
-// }
-//
-// table ServerSelect {
-//   clients:[Client];
-// }
+union Message { List, Create, Join }
 
 table Command {
   message:Message;

@@ -77,14 +77,12 @@ peers to one another.
   - [X] When client issues list command, server responds with a list of the
   rooms in the database
 
-  - [ ] When client issues a create command, server creates a room
+  - [X] When client issues a create command, server creates a room
 
     - Client: Create command with a Client object and Room name
 
-    - Server: Room object
-
   - [ ] When client issues a select command, server broadcasts client's info
-  to peers and peer info to client
+  to peers and other peer's info to client
 
     - Client: Room GUID
 
